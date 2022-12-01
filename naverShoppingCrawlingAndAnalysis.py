@@ -11,6 +11,8 @@ import re
 import numpy as np
 import warnings
 import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
 
 
 # 1. Data collection(Collect data from a website that fits topic and create and leverage my own dataset)
@@ -130,5 +132,60 @@ ax2 = fig.add_subplot(2, 1, 2)
 sns.regplot(x='Registration date', y='The number of likes', data=ndf, ax=ax2)
 ax2.set_ylim(0,500)
 
+plt.show()
+plt.close()
+
+X_ax1=ndf[['cost']]
+y_ax1=ndf[['The number of likes']]
+
+X_ax2=ndf[['Registration date']]
+y_ax2=ndf[['The number of likes']]
+
+X_ax1_train, X_ax1_test, y_ax1_train, y_ax1_test = train_test_split(X_ax1,
+                                                                    y_ax1,
+                                                                    test_size=0.3,
+                                                                    random_state=10)
+X_ax2_train, X_ax2_test, y_ax2_train, y_ax2_test = train_test_split(X_ax2,
+                                                                    y_ax2,
+                                                                    test_size=0.3,
+                                                                    random_state=10)
+
+
+# 2.3 Model learning and model evaluation numerical calculations using "Machine Learning" techniques
+
+
+# Creating LinearRegression Model Objects
+lr1 = LinearRegression()
+lr2 = LinearRegression()
+
+# Learn the model with train data
+lr1.fit(X_ax1_train, y_ax1_train)
+lr2.fit(X_ax2_train, y_ax2_train)
+
+# Slope, y-intercept of ax1
+print('ax1: slope a: ', lr1.coef_)
+print('ax1: y-intercept b', lr1.intercept_)
+print('\n')
+
+# Slope, y-intercept of ax2
+print('ax2: slope a', lr2.coef_)
+print('ax2: y-intercept b', lr2.intercept_)
+print('\n')
+
+# Compared to actual value y_hat is compared to actual value y_hat
+y_ax1_hat = lr1.predict(X_ax1)
+plt.figure(figsize=(10, 5))
+ax1_a = sns.distplot(y_ax1, hist=False, label="Actual Value")
+ax1_b = sns.distplot(y_ax1_hat, hist=False, label="Predicted Value", color='red')
+plt.legend()
+plt.show()
+plt.close()
+
+
+y_ax2_hat = lr2.predict(X_ax2)
+plt.figure(figsize=(10, 5))
+ax2_a = sns.distplot(y_ax2, hist=False, label="Actual Value")
+ax2_b = sns.distplot(y_ax2_hat, hist=False, label="Predicted Value", color='red')
+plt.legend()
 plt.show()
 plt.close()
