@@ -3,9 +3,14 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+import matplotlib.pyplot as plt
 import time
 import csv
+import pandas as pd
 import re
+import numpy as np
+import warnings
+import seaborn as sns
 
 
 # 1. Data collection(Collect data from a website that fits topic and create and leverage my own dataset)
@@ -92,3 +97,38 @@ for i in range(20):
 
 print("Data extraction completed for {} pages in {} pages".format(all, all))
 f.close()
+
+
+# 2. Data analysis
+
+# Remove FutureWarning
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
+# Read CSV File
+df = pd.read_csv('C:/Users/cksdn/Desktop/data.csv', encoding='cp949', header=None)
+df.columns = ['name', 'cost', 'Registration date', 'The number of likes', 'link']
+
+
+# 2.1 Simple statistical analysis after grouping data using groupby
+print(df.groupby(['cost', 'Registration date']).mean())
+print(df.groupby(['Registration date']).size())
+print(df.groupby('The number of likes').agg(np.mean))
+
+
+# 2.2 Drawing a graph using matplotlib
+
+# Set graph size, extract some data
+fig = plt.figure(figsize=(10,10))
+ndf = df[['cost', 'Registration date', 'The number of likes']]
+
+# Relationship between cost of goods(cost) and consumer preference (The number of likes)
+ax1 = fig.add_subplot(2, 1, 1)
+sns.regplot(x='cost', y='The number of likes', data=ndf, ax=ax1)
+
+# Relationship between Registration date of goods(Registration Date) and consumer preference (The number of likes)
+ax2 = fig.add_subplot(2, 1, 2)
+sns.regplot(x='Registration date', y='The number of likes', data=ndf, ax=ax2)
+ax2.set_ylim(0,500)
+
+plt.show()
+plt.close()
