@@ -58,15 +58,12 @@ for i in range(20):
 
     while True:
         browser.find_element(By.CSS_SELECTOR, 'body').send_keys(Keys.END)
-
         time.sleep(3)
-
         after_h = browser.execute_script("return window.scrollY")
-
         if after_h == before_h:
             break
-        
         before_h = after_h
+        
     #  Product information div
     items = browser.find_elements(By.CSS_SELECTOR, '.basicList_info_area__TWvzp')
     for item in items:
@@ -103,6 +100,7 @@ f.close()
 
 # 2. Data analysis
 
+
 # Remove FutureWarning
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
@@ -118,7 +116,6 @@ print(df.groupby('The number of likes').agg(np.mean))
 
 
 # 2.2 Drawing a graph using matplotlib
-
 # Set graph size, extract some data
 fig = plt.figure(figsize=(10,10))
 ndf = df[['cost', 'Registration date', 'The number of likes']]
@@ -135,6 +132,8 @@ ax2.set_ylim(0,500)
 plt.show()
 plt.close()
 
+
+# 2.3 Model learning and model evaluation numerical calculations using "Machine Learning" techniques
 X_ax1=ndf[['cost']]
 y_ax1=ndf[['The number of likes']]
 
@@ -149,10 +148,6 @@ X_ax2_train, X_ax2_test, y_ax2_train, y_ax2_test = train_test_split(X_ax2,
                                                                     y_ax2,
                                                                     test_size=0.3,
                                                                     random_state=10)
-
-
-# 2.3 Model learning and model evaluation numerical calculations using "Machine Learning" techniques
-
 
 # Creating LinearRegression Model Objects
 lr1 = LinearRegression()
@@ -180,7 +175,6 @@ ax1_b = sns.distplot(y_ax1_hat, hist=False, label="Predicted Value", color='red'
 plt.legend()
 plt.show()
 plt.close()
-
 
 y_ax2_hat = lr2.predict(X_ax2)
 plt.figure(figsize=(10, 5))
